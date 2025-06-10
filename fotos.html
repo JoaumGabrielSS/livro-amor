@@ -49,10 +49,18 @@
       font-size: 1.3em;
       margin: 15px auto;
       color: #5c2a2a;
-      padding: 0 10px;
+      padding: 0 10px 0 10px;
       max-width: 90vw;
+      max-height: 25vh;     /* Limita altura para scroll */
+      overflow-y: auto;     /* Scroll vertical se texto for maior */
       font-family: 'Dancing Script', cursive;
       transition: opacity 0.4s ease-in-out;
+    }
+    @media (max-width: 480px) {
+      .caption {
+        font-size: 1.1em;
+        max-height: 20vh;
+      }
     }
     #startButton {
       font-size: 1.5em;
@@ -113,8 +121,8 @@
 </head>
 <body>
   <div id="startPage">
-    <div id="startText">Aqui está a nossa história junto e a prova que eu amo você</div>
-    <button id="startButton">💖 Clique para abrir 💖</button>
+    <div id="startText">Quer uma prova que eu amo você?</div>
+    <button id="startButton">💖 Clique aqui e veja! 💖</button>
   </div>
 
   <div class="book" id="book">
@@ -173,38 +181,33 @@
       pageImg.style.opacity = 0;
       caption.style.opacity = 0;
       setTimeout(() => {
-        const p = pages[currentPage];
-        if (p.img) {
-          pageImg.innerHTML = `<img src="${p.img}" alt="Foto">`;
-        } else if (p.video) {
-          pageImg.innerHTML = `<video controls><source src="${p.video}" type="video/mp4"></video>`;
+        const content = pages[currentPage];
+        if (content.img) {
+          pageImg.innerHTML = `<img src="${content.img}" alt="Foto da nossa história" />`;
+          pageImg.style.height = '70vh';
+        } else if (content.video) {
+          pageImg.innerHTML = `<video autoplay muted loop playsinline src="${content.video}"></video>`;
+          pageImg.style.height = '70vh';
         } else {
           pageImg.innerHTML = '';
+          pageImg.style.height = 'auto';
         }
-        caption.textContent = p.caption || '';
+
+        caption.textContent = content.caption || '';
+
+        prevButton.disabled = currentPage === 0;
+        nextButton.disabled = currentPage === pages.length - 1;
+
         pageImg.style.opacity = 1;
         caption.style.opacity = 1;
-      }, 150);
+      }, 300);
     }
 
     startButton.addEventListener('click', () => {
       startPage.style.display = 'none';
       book.style.display = 'flex';
       nav.style.display = 'flex';
-      pageImg.style.opacity = 0;
-      caption.style.opacity = 0;
-      setTimeout(() => {
-        pageImg.style.opacity = 1;
-        caption.style.opacity = 1;
-      }, 200);
       updatePage();
-    });
-
-    nextButton.addEventListener('click', () => {
-      if (currentPage < pages.length - 1) {
-        currentPage++;
-        updatePage();
-      }
     });
 
     prevButton.addEventListener('click', () => {
@@ -214,10 +217,17 @@
       }
     });
 
+    nextButton.addEventListener('click', () => {
+      if (currentPage < pages.length - 1) {
+        currentPage++;
+        updatePage();
+      }
+    });
+
     backToStart.addEventListener('click', () => {
       book.style.display = 'none';
-      startPage.style.display = 'flex';
       nav.style.display = 'none';
+      startPage.style.display = 'block';
       currentPage = 0;
     });
   </script>
