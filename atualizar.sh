@@ -1,16 +1,16 @@
 #!/bin/bash
 
-# Mensagem de log
-echo "📦 Atualizando repositório..."
+cd /var/www/html/livro-amor || exit 1
 
-# Adiciona todos os arquivos modificados
-git add .
+# Mensagem de commit com data
+mensagem="Atualiza fotos.html em $(date '+%d/%m/%Y %H:%M')"
 
-# Commit com mensagem automática + timestamp
-git commit -m "Atualização automática: $(date '+%Y-%m-%d %H:%M:%S')"
+# Adiciona o novo arquivo
+git add fotos.html
 
-# Faz o push para o branch main
+# Faz o commit
+git commit -m "$mensagem"
+
+# Envia para o GitHub
 git push origin main
-
-echo "✅ Site atualizado com sucesso!"
 
