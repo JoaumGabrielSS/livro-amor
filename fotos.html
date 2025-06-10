@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nosso Livro de Amor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Georgia', serif;
+      background: linear-gradient(to bottom, #fff0f5, #ffe4e1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+    .book {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+      animation: flipPage 0.6s ease-in-out;
+    }
+    @keyframes flipPage {
+      from { transform: rotateY(-90deg); opacity: 0; }
+      to { transform: rotateY(0); opacity: 1; }
+    }
+    .page {
+      max-width: 95vw;
+      max-height: 70vh;
+      margin-bottom: 10px;
+      perspective: 1000px;
+    }
+    .page img, .page video {
+      width: auto;
+      height: 100%;
+      max-height: 70vh;
+      max-width: 95vw;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      transition: transform 0.6s, opacity 0.5s ease-in-out;
+      object-fit: cover;
+      display: block;
+    }
+    .caption {
+      font-size: 1.3em;
+      margin: 15px auto;
+      color: #5c2a2a;
+      padding: 0 10px;
+      max-width: 90vw;
+      font-family: 'Dancing Script', cursive;
+      transition: opacity 0.4s ease-in-out;
+    }
+    #startButton {
+      font-size: 1.5em;
+      padding: 12px 24px;
+      border: none;
+      background-color: #ffb6c1;
+      color: #222;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+      font-family: 'Cursive', sans-serif;
+      animation: pulse 1.6s infinite;
+      transition: transform 0.3s;
+      display: block;
+      margin: 0 auto;
+    }
+    #startButton:hover {
+      transform: scale(1.05);
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(255,182,193, 0.7); }
+      70% { box-shadow: 0 0 0 10px rgba(255,182,193, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255,182,193, 0); }
+    }
+    #startText {
+      font-size: 1.8em;
+      text-align: center;
+      padding: 20px;
+      font-family: 'Cursive', sans-serif;
+      color: #8b0000;
+    }
+    .navigation {
+      display: none;
+      flex-direction: row;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .navigation button {
+      padding: 10px 18px;
+      font-size: 1em;
+      border: none;
+      border-radius: 8px;
+      background-color: #ffd5ec;
+      color: #222;
+      cursor: pointer;
+    }
+    #backToStart {
+      font-size: 0.9em;
+      margin-top: 15px;
+      background-color: #ffe3f0;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="startPage">
+    <div id="startText">Aqui está a nossa história junto e a prova que eu amo você</div>
+    <button id="startButton">💖 Clique para abrir 💖</button>
+  </div>
+
+  <div class="book" id="book">
+    <div class="page" id="page"></div>
+    <div class="caption" id="caption"></div>
+    <div class="navigation" id="navButtons">
+      <button id="prevButton">Anterior</button>
+      <button id="nextButton">Próximo</button>
+    </div>
+    <button id="backToStart">Voltar ao Início</button>
+  </div>
+
+  <script>
+    const pages = [
+      { img: 'https://i.imgur.com/Ba7FewH.jpeg', caption: 'No dia 13 de janeiro eu decidi que queria viver a vida toda ao seu lado' },
+      { img: 'https://i.imgur.com/FF431TX.jpeg', caption: 'Nosso primeiro jogo e depois o rolê no toca, essa foto mostrou pro mundo o quanto somos feitos um para o outro.' },
+      { img: 'https://i.imgur.com/ZfSSFax.jpeg', caption: 'Você conheceu minha banda, o restante dos meus amigos, eu podia dizer pro mundo que te amava cada segundo da vida' },
+      { img: 'https://i.imgur.com/QRkxFgz.jpeg', caption: 'Os 30 da mulher mais linda do mundo, a mulher que eu escolhi casar.' },
+      { img: 'https://i.imgur.com/MLc06E6.jpeg', caption: 'Esse dia eu percebi o quanto além de combinarmos, somos um casal muito bonito e muito harmonioso' },
+      { img: 'https://i.imgur.com/wN4sLHe.jpeg', caption: 'Pra você ter ideia, esse dia nos pararam pra tirar essa foto, e eu acho ela perfeita' },
+      { img: 'https://i.imgur.com/7AIzXWp.jpeg', caption: 'Nosso primeiro show na festa da uva juntos, foi tudo muito lindo' },
+      { img: 'https://i.imgur.com/yoSbqR0.jpeg', caption: 'Essa foto se tornou meu papel de parede já tem 1 ano e pouco que eu nunca tirei, é uma das que mais amo.' },
+      { img: 'https://i.imgur.com/fR8S2c0.jpeg', caption: 'Parece que foi ontem essa foto, os anos passam e eu sinto que não vivi ainda o suficiente com você, 2 anos foram 2 dias' },
+      { img: 'https://imgur.com/SYFgxcf.jpg', caption: '' },
+      { img: 'https://imgur.com/Zn8S9cX.jpg', caption: '' },
+      { img: 'https://imgur.com/QrXBsj7.jpg', caption: '' },
+      { img: 'https://imgur.com/HJw4KkO.jpg', caption: '' },
+      { img: 'https://imgur.com/I8K9ikJ.jpg', caption: '' },
+      { img: 'https://imgur.com/qraMMQZ.jpg', caption: '' },
+      { img: 'https://imgur.com/W4BuwXu.jpg', caption: '' },
+      { img: 'https://imgur.com/ZplnloW.jpg', caption: '' },
+      { img: 'https://imgur.com/qSYFj1L.jpg', caption: '' },
+      { img: 'https://imgur.com/2Si1aZS.jpg', caption: '' },
+      { img: 'https://imgur.com/OrQDpgb.jpg', caption: '' },
+      { img: 'https://imgur.com/LYBsKOt.jpg', caption: '' },
+      { img: 'https://imgur.com/mELSfop.jpg', caption: '' },
+      { video: 'https://imgur.com/XRQgYRd.mp4', caption: 'O show que você sempre quis ir comigo 💕' },
+      { video: 'https://imgur.com/1wva9PM.mp4', caption: 'O dia que te pedi em noivado. Levei a sério… mas farei um novo pedido mais bonito. 💍✨' },
+      { caption: 'E nossa história não acaba aqui. Ainda viveremos muitos momentos especiais e inesquecíveis. Vamos registrar todos eles, para eternizarmos cada pedacinho da nossa jornada. Mas saiba: você já é eterna no meu coração. Eu te amo, infinitamente.' }
+    ];
+
+    const startButton = document.getElementById('startButton');
+    const startPage = document.getElementById('startPage');
+    const book = document.getElementById('book');
+    const pageImg = document.getElementById('page');
+    const caption = document.getElementById('caption');
+    const prevButton = document.getElementById('prevButton');
+    const nextButton = document.getElementById('nextButton');
+    const nav = document.getElementById('navButtons');
+    const backToStart = document.getElementById('backToStart');
+
+    let currentPage = 0;
+
+    function updatePage() {
+      pageImg.style.opacity = 0;
+      caption.style.opacity = 0;
+      setTimeout(() => {
+        const p = pages[currentPage];
+        if (p.img) {
+          pageImg.innerHTML = `<img src="${p.img}" alt="Foto">`;
+        } else if (p.video) {
+          pageImg.innerHTML = `<video controls><source src="${p.video}" type="video/mp4"></video>`;
+        } else {
+          pageImg.innerHTML = '';
+        }
+        caption.textContent = p.caption || '';
+        pageImg.style.opacity = 1;
+        caption.style.opacity = 1;
+      }, 150);
+    }
+
+    startButton.addEventListener('click', () => {
+      startPage.style.display = 'none';
+      book.style.display = 'flex';
+      nav.style.display = 'flex';
+      pageImg.style.opacity = 0;
+      caption.style.opacity = 0;
+      setTimeout(() => {
+        pageImg.style.opacity = 1;
+        caption.style.opacity = 1;
+      }, 200);
+      updatePage();
+    });
+
+    nextButton.addEventListener('click', () => {
+      if (currentPage < pages.length - 1) {
+        currentPage++;
+        updatePage();
+      }
+    });
+
+    prevButton.addEventListener('click', () => {
+      if (currentPage > 0) {
+        currentPage--;
+        updatePage();
+      }
+    });
+
+    backToStart.addEventListener('click', () => {
+      book.style.display = 'none';
+      startPage.style.display = 'flex';
+      nav.style.display = 'none';
+      currentPage = 0;
+    });
+  </script>
+</body>
+</html>
+
